@@ -1,0 +1,162 @@
+const form = document.querySelector('#form');
+
+const validators = {
+  username: validateUsername,
+  email: validateEmail,
+  password: validatePassword,
+  passwordRepeat: validatePasswordRepeat,
+  phone: validatePhone,
+};
+
+form.addEventListener('input', e => {
+  const key = e.target.name;
+  const value = e.target.value;
+  const formData = new FormData(e.currentTarget);
+  const values = Object.fromEntries(formData);
+
+  const error = validate(key, value, values);
+
+  if (!error) {
+    e.target.onblur = () => {
+      e.target.setAttribute('data-dirty', 'true');
+    };
+    clearError(key);
+    return; // функция останавливается
+  }
+
+  // есть ошибка
+  if (e.target.dataset.dirty === 'true') {
+    setError(key, error);
+    return; // функция останавливается
+  }
+
+  // есть ошибка, но мы еще не ушли с поля
+  e.target.onblur = () => {
+    e.target.setAttribute('data-dirty', 'true');
+    setError(key, error);
+  };
+});
+
+form.addEventListener('submit', e => {
+  const formData = new FormData(e.currentTarget);
+  const values = Object.fromEntries(formData);
+
+  let isFormValid = true;
+
+  formData.forEach((value, key) => {
+    const error = validate(key, value, values);
+
+    if (!error) {
+      return; // функция останавливается
+    }
+
+    // есть ошибка
+    setError(key, error);
+
+    const input = form.querySelector(`.form__input[name=${key}]`);
+    input.setAttribute('data-dirty', 'true');
+
+    isFormValid = false;
+  });
+
+  if (!isFormValid) {
+    e.preventDefault();
+    return; // функция останавливается
+  }
+
+  // форма валидна
+  console.log('send request', values);
+});
+
+function validate(key, value, values) {
+  const validator = validators[key];
+  return validator(value, values);
+}
+
+function setError(key, errorMessage) {
+  const input = form.querySelector(`.form__input[name=${key}]`);
+  const inputGroup = input.parentElement;
+  const error = inputGroup.querySelector('.form__error');
+
+  input.classList.add('form__input_invalid');
+
+  error.textContent = errorMessage;
+  error.classList.remove('form__error_hidden');
+}
+
+function clearError(key) {
+  const input = form.querySelector(`.form__input[name=${key}]`);
+  const inputGroup = input.parentElement;
+  const error = inputGroup.querySelector('.form__error');
+
+  input.classList.remove('form__input_invalid');
+
+  error.textContent = null;
+  error.classList.add('form__error_hidden');
+}
+
+/*-----------------------VALIDATORS-----------------------*/
+function validateUsername(value) {
+  if (!value) {
+    return 'Введите имя пользователя';
+  }
+
+  if (value.length <= 4) {
+    return 'Имя пользователя должно быть не меньше 5 символов';
+  }
+
+  return null;
+}
+
+function validateEmail(value) {
+  const input = document.createElement('input');
+
+  input.type = 'email';
+  input.required = true;
+  input.value = value;
+
+  const isValid =
+    typeof input.checkValidity === 'function' ? input.checkValidity() : /\S+@\S+\.\S+/.test(value);
+
+  if (isValid) {
+    return null;
+  }
+
+  return 'Введите корректный email';
+}
+
+function validatePassword(value) {
+  if (!value) {
+    return 'Введите пароль';
+  }
+
+  if (value.length <= 5) {
+    return 'Пароль должен быть не меньше 6 символов';
+  }
+
+  return null;
+}
+
+function validatePasswordRepeat(value, values) {
+  if (!values.password || !value) {
+    return 'Введите пароль';
+  }
+
+  if (value !== values.password) {
+    return 'Пароли не совпадают';
+  }
+
+  return null;
+}
+
+function validatePhone(value) {
+  if (!value) {
+    return 'Введите номер телефона';
+  }
+
+  if (!/^\d{11}$/.test(value)) {
+    return 'Некорретный номер телефона';
+  }
+
+  return null;
+}

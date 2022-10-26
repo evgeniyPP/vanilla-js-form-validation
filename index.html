@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>Валидация форм</title>
+    <script src="./main.js" defer></script>
+  </head>
+
+  <body class="page">
+    <header class="header">
+      <img
+        src="https://pictures.s3.yandex.net/frontend-developer/dom_bom/logo.svg"
+        alt="Я.Практикум"
+        class="header__logo"
+      />
+      <p class="header__logo-sub">Валидация форм</p>
+    </header>
+
+    <main class="container">
+      <div class="cover">
+        <img
+          src="https://pictures.s3.yandex.net/frontend-developer/dom_bom/cover.jpg"
+          alt="Лес"
+          class="cover__image"
+        />
+        <h1 class="cover__heading">Формы</h1>
+      </div>
+
+      <form
+        id="form"
+        name="register_form"
+        action="http://httpbin.org/post"
+        method="POST"
+        class="form"
+        novalidate
+      >
+        <h3 class="form__heading">Форма регистрации</h3>
+
+        <div class="form__inputs">
+          <div>
+            <input
+              type="text"
+              name="username"
+              placeholder="Имя пользователя"
+              autocomplete="off"
+              class="form__input"
+              required
+            />
+            <p class="form__error form__error_hidden"></p>
+          </div>
+
+          <div>
+            <input
+              type="email"
+              name="email"
+              placeholder="Электронная почта"
+              autocomplete="off"
+              class="form__input"
+            />
+            <p class="form__error form__error_hidden"></p>
+          </div>
+
+          <div>
+            <input
+              type="password"
+              name="password"
+              placeholder="Пароль"
+              autocomplete="off"
+              class="form__input"
+              required
+            />
+            <p class="form__error form__error_hidden"></p>
+          </div>
+
+          <div>
+            <input
+              type="password"
+              name="passwordRepeat"
+              placeholder="Повтор пароля"
+              autocomplete="off"
+              class="form__input"
+            />
+            <p class="form__error form__error_hidden"></p>
+          </div>
+
+          <div>
+            <input
+              type="text"
+              name="phone"
+              placeholder="Телефон"
+              autocomplete="off"
+              class="form__input"
+            />
+            <p class="form__error form__error_hidden"></p>
+          </div>
+        </div>
+
+        <button id="submitButton" type="submit" class="form__submit-btn">Зарегистрироваться</button>
+      </form>
+    </main>
+  </body>
+</html>
