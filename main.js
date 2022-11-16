@@ -26,7 +26,7 @@ function enableValidation(form, validators) {
 
     if (!error) {
       e.target.onblur = () => {
-        e.target.setAttribute('data-dirty', 'true');
+        e.target.dataset.dirty = 'true';
       };
       clearError(key);
       return; // функция останавливается
@@ -40,7 +40,7 @@ function enableValidation(form, validators) {
 
     // есть ошибка, но мы еще не ушли с поля
     e.target.onblur = () => {
-      e.target.setAttribute('data-dirty', 'true');
+      e.target.dataset.dirty = 'true';
       setError(key, error);
     };
   });
@@ -62,7 +62,7 @@ function enableValidation(form, validators) {
       setError(key, error);
 
       const input = form.querySelector(`.form__input[name=${key}]`);
-      input.setAttribute('data-dirty', 'true');
+      input.dataset.dirty = 'true';
 
       isFormValid = false;
     });
