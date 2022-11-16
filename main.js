@@ -1,6 +1,5 @@
-const form = document.querySelector('#form');
-
-const validators = {
+const myForm = document.querySelector('#form');
+const myFormValidators = {
   username: validateUsername,
   email: validateEmail,
   password: validatePassword,
@@ -8,73 +7,78 @@ const validators = {
   phone: validatePhone,
 };
 
-form.addEventListener('input', e => {
-  const key = e.target.name;
-  const value = e.target.value;
-  const formData = new FormData(e.currentTarget);
-  const values = Object.fromEntries(formData);
+enableValidation(myForm, myFormValidators);
 
-  const error = validate(key, value, values);
-
-  if (!error) {
-    e.target.onblur = () => {
-      e.target.setAttribute('data-dirty', 'true');
-    };
-    clearError(key);
-    return; // функция останавливается
-  }
-
-  // есть ошибка
-  if (e.target.dataset.dirty === 'true') {
-    setError(key, error);
-    return; // функция останавливается
-  }
-
-  // есть ошибка, но мы еще не ушли с поля
-  e.target.onblur = () => {
-    e.target.setAttribute('data-dirty', 'true');
-    setError(key, error);
+/*-----------------------FUNCTIONS-----------------------*/
+function enableValidation(form, validators) {
+  const validate = (key, value, values) => {
+    const validator = validators[key];
+    return validator(value, values);
   };
-});
 
-form.addEventListener('submit', e => {
-  const formData = new FormData(e.currentTarget);
-  const values = Object.fromEntries(formData);
+  form.addEventListener('input', e => {
+    const key = e.target.name;
+    const value = e.target.value;
+    const formData = new FormData(e.currentTarget);
+    const values = Object.fromEntries(formData);
 
-  let isFormValid = true;
-
-  formData.forEach((value, key) => {
     const error = validate(key, value, values);
 
     if (!error) {
+      e.target.onblur = () => {
+        e.target.setAttribute('data-dirty', 'true');
+      };
+      clearError(key);
       return; // функция останавливается
     }
 
     // есть ошибка
-    setError(key, error);
+    if (e.target.dataset.dirty === 'true') {
+      setError(key, error);
+      return; // функция останавливается
+    }
 
-    const input = form.querySelector(`.form__input[name=${key}]`);
-    input.setAttribute('data-dirty', 'true');
-
-    isFormValid = false;
+    // есть ошибка, но мы еще не ушли с поля
+    e.target.onblur = () => {
+      e.target.setAttribute('data-dirty', 'true');
+      setError(key, error);
+    };
   });
 
-  if (!isFormValid) {
-    e.preventDefault();
-    return; // функция останавливается
-  }
+  form.addEventListener('submit', e => {
+    const formData = new FormData(e.currentTarget);
+    const values = Object.fromEntries(formData);
 
-  // форма валидна
-  console.log('send request', values);
-});
+    let isFormValid = true;
 
-function validate(key, value, values) {
-  const validator = validators[key];
-  return validator(value, values);
+    formData.forEach((value, key) => {
+      const error = validate(key, value, values);
+
+      if (!error) {
+        return; // функция останавливается
+      }
+
+      // есть ошибка
+      setError(key, error);
+
+      const input = form.querySelector(`.form__input[name=${key}]`);
+      input.setAttribute('data-dirty', 'true');
+
+      isFormValid = false;
+    });
+
+    if (!isFormValid) {
+      e.preventDefault();
+      return; // функция останавливается
+    }
+
+    // форма валидна
+    console.log('send request', values);
+  });
 }
 
 function setError(key, errorMessage) {
-  const input = form.querySelector(`.form__input[name=${key}]`);
+  const input = myForm.querySelector(`.form__input[name=${key}]`);
   const inputGroup = input.parentElement;
   const error = inputGroup.querySelector('.form__error');
 
@@ -85,7 +89,7 @@ function setError(key, errorMessage) {
 }
 
 function clearError(key) {
-  const input = form.querySelector(`.form__input[name=${key}]`);
+  const input = myForm.querySelector(`.form__input[name=${key}]`);
   const inputGroup = input.parentElement;
   const error = inputGroup.querySelector('.form__error');
 
