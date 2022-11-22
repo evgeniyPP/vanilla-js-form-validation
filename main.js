@@ -6,28 +6,34 @@ const myFormValidators = {
   passwordRepeat: validatePasswordRepeat,
   phone: validatePhone,
 };
+const myFormClassNames = {
+  inputsContainer: 'form__inputs',
+  input: 'form__input',
+  inputInvalid: 'form__input_invalid',
+  error: 'form__error',
+};
 
-enableValidation(myForm, myFormValidators);
+enableValidation(myForm, myFormValidators, myFormClassNames);
 
 /*-----------------------FUNCTIONS-----------------------*/
-function enableValidation(form, validators) {
+function enableValidation(form, validators, classNames) {
   const validate = (key, value, values) => {
     const validator = validators[key];
     return validator(value, values);
   };
 
   const getInputElement = key => {
-    return form.querySelector(`.form__input[name=${key}]`);
+    return form.querySelector(`.${classNames.input}[name=${key}]`);
   };
 
   const getErrorElement = key => {
-    const inputsContainer = form.querySelector('.form__inputs');
-    return inputsContainer.querySelector(`.form__error[data-key=${key}]`);
+    const inputsContainerEl = form.querySelector(`.${classNames.inputsContainer}`);
+    return inputsContainerEl.querySelector(`.${classNames.error}[data-key=${key}]`);
   };
 
   const setError = (key, errorMessage) => {
     const input = getInputElement(key);
-    input.classList.add('form__input_invalid');
+    input.classList.add(classNames.inputInvalid);
 
     let errorEl = getErrorElement(key);
     if (!errorEl) {
@@ -36,13 +42,13 @@ function enableValidation(form, validators) {
     }
 
     errorEl.textContent = errorMessage;
-    errorEl.classList.add('form__error');
+    errorEl.classList.add(classNames.error);
     errorEl.dataset.key = key;
   };
 
   const clearError = key => {
     const input = getInputElement(key);
-    input.classList.remove('form__input_invalid');
+    input.classList.remove(classNames.inputInvalid);
 
     let errorEl = getErrorElement(key);
     errorEl?.remove();
