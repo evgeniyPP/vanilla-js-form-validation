@@ -1,8 +1,8 @@
 const myForm = document.querySelector('#form');
 const myFormValidators = {
-  username: validateUsername,
+  username: validateUsername(5),
   email: validateEmail,
-  password: validatePassword,
+  password: validatePassword(6),
   passwordRepeat: validatePasswordRepeat,
   phone: validatePhone,
 };
@@ -100,18 +100,18 @@ function clearError(key) {
 }
 
 /*-----------------------VALIDATORS-----------------------*/
-function validateUsername(value) {
-  const LENGTH = 5;
+function validateUsername(length) {
+  return function (value) {
+    if (!value) {
+      return 'Введите имя пользователя';
+    }
 
-  if (!value) {
-    return 'Введите имя пользователя';
-  }
+    if (value.length < length) {
+      return `Имя пользователя должно быть не меньше ${length} символов`;
+    }
 
-  if (value.length < LENGTH) {
-    return `Имя пользователя должно быть не меньше ${LENGTH} символов`;
-  }
-
-  return null;
+    return null;
+  };
 }
 
 function validateEmail(value) {
@@ -131,18 +131,18 @@ function validateEmail(value) {
   return 'Введите корректный email';
 }
 
-function validatePassword(value) {
-  const LENGTH = 6;
+function validatePassword(length) {
+  return function (value) {
+    if (!value) {
+      return 'Введите пароль';
+    }
 
-  if (!value) {
-    return 'Введите пароль';
-  }
+    if (value.length < length) {
+      return `Пароль должен быть не меньше ${length} символов`;
+    }
 
-  if (value.length < LENGTH) {
-    return `Пароль должен быть не меньше ${LENGTH} символов`;
-  }
-
-  return null;
+    return null;
+  };
 }
 
 function validatePasswordRepeat(value, values) {
