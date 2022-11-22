@@ -16,30 +16,36 @@ function enableValidation(form, validators) {
     return validator(value, values);
   };
 
-  const getInput = key => {
+  const getInputElement = key => {
     return form.querySelector(`.form__input[name=${key}]`);
   };
 
-  const setError = (key, errorMessage) => {
-    const input = getInput(key);
-    const inputGroup = input.parentElement;
-    const error = inputGroup.querySelector('.form__error');
+  const getErrorElement = key => {
+    const inputsContainer = form.querySelector('.form__inputs');
+    return inputsContainer.querySelector(`.form__error[data-key=${key}]`);
+  };
 
+  const setError = (key, errorMessage) => {
+    const input = getInputElement(key);
     input.classList.add('form__input_invalid');
 
-    error.textContent = errorMessage;
-    error.classList.remove('form__error_hidden');
+    let errorEl = getErrorElement(key);
+    if (!errorEl) {
+      errorEl = document.createElement('p');
+      input.after(errorEl);
+    }
+
+    errorEl.textContent = errorMessage;
+    errorEl.classList.add('form__error');
+    errorEl.dataset.key = key;
   };
 
   const clearError = key => {
-    const input = getInput(key);
-    const inputGroup = input.parentElement;
-    const error = inputGroup.querySelector('.form__error');
-
+    const input = getInputElement(key);
     input.classList.remove('form__input_invalid');
 
-    error.textContent = null;
-    error.classList.add('form__error_hidden');
+    let errorEl = getErrorElement(key);
+    errorEl?.remove();
   };
 
   form.addEventListener('input', e => {
@@ -87,7 +93,7 @@ function enableValidation(form, validators) {
       // есть ошибка
       setError(key, error);
 
-      const input = getInput(key);
+      const input = getInputElement(key);
       input.dataset.dirty = 'true';
 
       isFormValid = false;
