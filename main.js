@@ -101,12 +101,14 @@ function clearError(key) {
 
 /*-----------------------VALIDATORS-----------------------*/
 function validateUsername(value) {
+  const LENGTH = 5;
+
   if (!value) {
     return 'Введите имя пользователя';
   }
 
-  if (value.length <= 4) {
-    return 'Имя пользователя должно быть не меньше 5 символов';
+  if (value.length < LENGTH) {
+    return `Имя пользователя должно быть не меньше ${LENGTH} символов`;
   }
 
   return null;
@@ -130,12 +132,14 @@ function validateEmail(value) {
 }
 
 function validatePassword(value) {
+  const LENGTH = 6;
+
   if (!value) {
     return 'Введите пароль';
   }
 
-  if (value.length <= 5) {
-    return 'Пароль должен быть не меньше 6 символов';
+  if (value.length < LENGTH) {
+    return `Пароль должен быть не меньше ${LENGTH} символов`;
   }
 
   return null;
