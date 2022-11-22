@@ -16,6 +16,32 @@ function enableValidation(form, validators) {
     return validator(value, values);
   };
 
+  const getInput = key => {
+    return form.querySelector(`.form__input[name=${key}]`);
+  };
+
+  const setError = (key, errorMessage) => {
+    const input = getInput(key);
+    const inputGroup = input.parentElement;
+    const error = inputGroup.querySelector('.form__error');
+
+    input.classList.add('form__input_invalid');
+
+    error.textContent = errorMessage;
+    error.classList.remove('form__error_hidden');
+  };
+
+  const clearError = key => {
+    const input = getInput(key);
+    const inputGroup = input.parentElement;
+    const error = inputGroup.querySelector('.form__error');
+
+    input.classList.remove('form__input_invalid');
+
+    error.textContent = null;
+    error.classList.add('form__error_hidden');
+  };
+
   form.addEventListener('input', e => {
     const key = e.target.name;
     const value = e.target.value;
@@ -61,7 +87,7 @@ function enableValidation(form, validators) {
       // есть ошибка
       setError(key, error);
 
-      const input = form.querySelector(`.form__input[name=${key}]`);
+      const input = getInput(key);
       input.dataset.dirty = 'true';
 
       isFormValid = false;
@@ -75,28 +101,6 @@ function enableValidation(form, validators) {
     // форма валидна
     console.log('send request', values);
   });
-}
-
-function setError(key, errorMessage) {
-  const input = myForm.querySelector(`.form__input[name=${key}]`);
-  const inputGroup = input.parentElement;
-  const error = inputGroup.querySelector('.form__error');
-
-  input.classList.add('form__input_invalid');
-
-  error.textContent = errorMessage;
-  error.classList.remove('form__error_hidden');
-}
-
-function clearError(key) {
-  const input = myForm.querySelector(`.form__input[name=${key}]`);
-  const inputGroup = input.parentElement;
-  const error = inputGroup.querySelector('.form__error');
-
-  input.classList.remove('form__input_invalid');
-
-  error.textContent = null;
-  error.classList.add('form__error_hidden');
 }
 
 /*-----------------------VALIDATORS-----------------------*/
