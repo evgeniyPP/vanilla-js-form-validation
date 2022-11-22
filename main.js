@@ -1,22 +1,28 @@
-const myForm = document.querySelector('#form');
-const myFormValidators = {
-  username: validateUsername(5),
-  email: validateEmail,
-  password: validatePassword(6),
-  passwordRepeat: validatePasswordRepeat,
-  phone: validatePhone,
-};
-const myFormClassNames = {
-  inputsContainer: 'form__inputs',
-  input: 'form__input',
-  inputInvalid: 'form__input_invalid',
-  error: 'form__error',
-};
-
-enableValidation(myForm, myFormValidators, myFormClassNames);
+enableValidation({
+  form: document.querySelector('#form'),
+  validators: {
+    username: validateUsername(5),
+    email: validateEmail,
+    password: validatePassword(6),
+    passwordRepeat: validatePasswordRepeat,
+    phone: validatePhone,
+  },
+  classNames: {
+    inputsContainer: 'form__inputs',
+    input: 'form__input',
+    inputInvalid: 'form__input_invalid',
+    error: 'form__error',
+  },
+  onSubmit: values => {
+    console.log('send request', values);
+  },
+  onError: values => {
+    console.error('form is invalid', values);
+  },
+});
 
 /*-----------------------FUNCTIONS-----------------------*/
-function enableValidation(form, validators, classNames) {
+function enableValidation({ form, validators, classNames, onSubmit, onError }) {
   const validate = (key, value, values) => {
     const validator = validators[key];
     return validator(value, values);
@@ -107,11 +113,12 @@ function enableValidation(form, validators, classNames) {
 
     if (!isFormValid) {
       e.preventDefault();
+      onError(values, e);
       return; // функция останавливается
     }
 
     // форма валидна
-    console.log('send request', values);
+    onSubmit(values, e);
   });
 }
 
