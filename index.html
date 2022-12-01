@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="./style.css" />
     <title>Валидация форм</title>
+    <script src="./vendor/pristine.min.js" defer></script>
     <script src="./main.js" defer></script>
   </head>
 
@@ -38,7 +39,7 @@
       >
         <h3 class="form__heading">Форма регистрации</h3>
 
-        <div class="form__inputs">
+        <div class="form__group">
           <input
             type="text"
             name="username"
@@ -46,35 +47,65 @@
             autocomplete="off"
             class="form__input"
             required
+            minlength="5"
+            data-pristine-required-message="Введите имя пользователя"
+            data-pristine-minlength-message="Имя пользователя должно быть минимум 5 символов"
           />
+        </div>
+
+        <div class="form__group">
           <input
             type="email"
             name="email"
             placeholder="Электронная почта"
             autocomplete="off"
             class="form__input"
+            required
+            data-pristine-required-message="Введите почту"
+            data-pristine-email-message="Введите корректную почту"
           />
+        </div>
+
+        <div class="form__group">
           <input
             type="password"
+            id="formPassword"
             name="password"
             placeholder="Пароль"
             autocomplete="off"
             class="form__input"
             required
+            minlength="6"
+            data-pristine-required-message="Введите пароль"
+            data-pristine-minlength-message="Пароль должен быть минимум 6 символов"
           />
+        </div>
+
+        <div class="form__group">
           <input
             type="password"
             name="passwordRepeat"
             placeholder="Повтор пароля"
             autocomplete="off"
             class="form__input"
+            required
+            data-pristine-equals="#formPassword"
+            data-pristine-required-message="Введите повтор пароля"
+            data-pristine-equals-message="Пароли не совпадают"
           />
+        </div>
+
+        <div class="form__group">
           <input
             type="text"
             name="phone"
             placeholder="Телефон"
             autocomplete="off"
             class="form__input"
+            required
+            pattern="/^\+?\d{11}$/"
+            data-pristine-required-message="Введите номер телефона"
+            data-pristine-pattern-message="Введите корректный номер телефона"
           />
         </div>
 

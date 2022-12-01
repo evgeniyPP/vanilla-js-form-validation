@@ -74,11 +74,11 @@
   box-sizing: border-box;
 }
 
-.form__input_invalid {
+.form__group_invalid .form__input {
   border-color: #ff3333;
 }
 
-.form__input_valid {
+.form__group_valid .form__input {
   border-color: #23b324;
 }
 
